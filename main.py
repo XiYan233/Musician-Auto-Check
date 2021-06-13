@@ -93,7 +93,7 @@ def userinfo():
         print("目前账户云豆：" + str(userinfo_json['data']['cloudBean']) + "个")
         return str(userinfo_json['data']['cloudBean'])
 
-userinfo()
+userinfo = userinfo()
 
 
 #企业微信机器人推送
@@ -104,7 +104,7 @@ def push():
         data = {
             "msgtype": "markdown",
             "markdown": {
-                "content": "<font color=\"warning\">网易音乐人签到通知</font>\n" + '> 当前云豆总数：' + "<font color=\"warning\">" + userinfo() + "</font>个" + '\n ' + '\n 运行日志：\n' + loginlog + '\n' + get_task_log + '\n' + checklog
+                "content": "<font color=\"warning\">网易音乐人签到通知</font>\n" + '> 当前云豆总数：' + "<font color=\"warning\">" + userinfo + "</font>个" + '\n ' + '\n 运行日志：\n' + loginlog + '\n' + get_task_log + '\n' + checklog
             }
         }
         push = requests.post(url='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=' + robot_key, headers=headers, json=data)
