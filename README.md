@@ -17,5 +17,6 @@
 
 ## 启动
 ```
+pip install requests
 python main.py
 ```
