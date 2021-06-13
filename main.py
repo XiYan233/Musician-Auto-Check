@@ -21,8 +21,16 @@ phone = config.get("setting","phone")
 #读取密码
 password = config.get("setting","password")
 
+#读取推送机器人开关
+pushswitch = config.get("setting","pushswitch")
+
+#读取企业微信机器人Key
+robot_key = config.get("setting","robotkey")
+
 #登录
 def login():
+
+    global loginlog
 
     if md5 == "true":
         login = requests.get(api + "/login/cellphone?phone=" + phone + "&md5_password=" + password)
@@ -32,6 +40,7 @@ def login():
     #返回cookie
     if login.status_code == 200:
         print("登录成功！")
+        loginlog = '>' + '登陆成功！'
         return login.cookies
 
 
@@ -43,6 +52,7 @@ def get_task():
 
     global userMissionId
     global period
+    global get_task_log
 
     get_task = requests.get(api + "/musician/tasks",cookies=login_cookie)
 
@@ -55,16 +65,56 @@ def get_task():
         #print(json_array)
         userMissionId = str(json_array['userMissionId'])
         print("获取missionId成功！")
+        get_task_log = '>' + '获取missionId成功！\n'
 
         period = str(json_array['period'])
         print("获取period成功！")
+        get_task_log += '>' + '获取period成功！'
 
 get_task()
 
 #签到
 def check():
+
+    global checklog
+
     check = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId + "&period=" + period,cookies=login_cookie)
     if check.status_code == 200:
         print("签到成功！")
+        checklog = '>' + '签到成功！'
 
 check()
+
+#获取账户云豆数
+def userinfo():
+    userinfo = requests.get(api + "/musician/cloudbean",cookies=login_cookie)
+    if userinfo.status_code == 200:
+        userinfo_json = userinfo.json()
+        print("目前账户云豆：" + str(userinfo_json['data']['cloudBean']) + "个")
+        return str(userinfo_json['data']['cloudBean'])
+
+userinfo()
+
+
+#企业微信机器人推送
+
+def push():
+    if pushswitch == "true":
+        headers = {"Content-Type": "text/plain"}
+        data = {
+            "msgtype": "markdown",
+            "markdown": {
+                "content": "<font color=\"warning\">网易音乐人签到通知</font>\n" + '> 当前云豆总数：' + "<font color=\"warning\">" + userinfo() + "</font>个" + '\n ' + '\n 运行日志：\n' + loginlog + '\n' + get_task_log + '\n' + checklog
+            }
+        }
+        push = requests.post(url='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=' + robot_key, headers=headers, json=data)
+        data = json.loads(push.text)
+        print(push.text)
+        if data['errmsg'] == 'ok':
+            print('企业微信机器人推送成功')
+        else:
+            print('企业微信机器人推送失败,请检查key是否正确')
+    else:
+        print("未开启企业机器人推送")
+
+push()
