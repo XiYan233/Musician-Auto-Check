@@ -17,5 +17,5 @@
 
 ## 启动
 ```
-python mian.py
+python main.py
 ```
