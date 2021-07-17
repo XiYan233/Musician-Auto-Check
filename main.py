@@ -47,6 +47,18 @@ def login():
 login_cookie = login()
 #print(login_cookie)
 
+#签到
+def check():
+
+    global checklog
+
+    check = requests.get(api + "/musician/sign",cookies=login_cookie)
+    if check.status_code == 200:
+        print("登录音乐人中心完成！")
+        checklog = '>' + '登录音乐人中心完成！'
+
+check()
+
 #获取任务userMissionId和period
 def get_task():
 
@@ -73,17 +85,19 @@ def get_task():
 
 get_task()
 
-#签到
-def check():
+#领取登录音乐人中心云豆
+def receiveCheck():
 
     global checklog
 
     check = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId + "&period=" + period,cookies=login_cookie)
     if check.status_code == 200:
-        print("签到成功！")
-        checklog = '>' + '签到成功！'
+        print("领取登录音乐人中心云豆成功！")
+        checklog = '>' + '领取登录音乐人中心云豆成功！'
 
-check()
+receiveCheck()
+
+
 
 #获取账户云豆数
 def userinfo():
