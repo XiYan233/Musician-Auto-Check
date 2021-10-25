@@ -63,7 +63,13 @@ check()
 def get_task():
 
     global userMissionId
+    global userMissionId1
+    global userMissionId2
+    global userMissionId3
     global period
+    global period1
+    global period2
+    global period3
     global get_task_log
 
     get_task = requests.get(api + "/musician/tasks",cookies=login_cookie)
@@ -73,13 +79,22 @@ def get_task():
         task_json = get_task.json()
         #print(jsonstr)
 
-        json_array = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[7]
+        json_array = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[8]
+        json_array1 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[9]
+        json_array2 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[10]
+        json_array3 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[12]
         #print(json_array)
         userMissionId = str(json_array['userMissionId'])
+        userMissionId1 = str(json_array1['userMissionId'])
+        userMissionId2 = str(json_array2['userMissionId'])
+        userMissionId3 = str(json_array3['userMissionId'])
         print("获取missionId成功！")
         get_task_log = '>' + '获取missionId成功！\n'
 
         period = str(json_array['period'])
+        period1 = str(json_array1['period'])
+        period2 = str(json_array2['period'])
+        period3 = str(json_array3['period'])
         print("获取period成功！")
         get_task_log += '>' + '获取period成功！'
 
@@ -91,9 +106,12 @@ def receiveCheck():
     global checklog
 
     check = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId + "&period=" + period,cookies=login_cookie)
+    check1 = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId1 + "&period=" + period1,cookies=login_cookie)
+    check2 = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId2 + "&period=" + period2,cookies=login_cookie)
+    check3 = requests.get(api + "/musician/cloudbean/obtain?id=" + userMissionId3 + "&period=" + period3,cookies=login_cookie)
     if check.status_code == 200:
         print("领取登录音乐人中心云豆成功！")
-        checklog = '>' + '领取登录音乐人中心云豆成功！'
+        checklog = '>' + '领取登录音乐人中心云豆成功！\n ' + '>' + '领取里程碑奖励成功！'
 
 receiveCheck()
 
