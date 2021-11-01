@@ -77,14 +77,18 @@ def get_task():
     get_task = requests.get(api + "/musician/tasks", cookies=login_cookie)
 
     if get_task.status_code == 200:
-        task_json = get_task.json()
-        # print(jsonstr)
+        
+        task_json = json.loads(json.dumps(json.loads(json.dumps(get_task.json()))['data']['list']))
+        #print(jsonstr)
+        
 
-        json_array = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[8]
-        json_array1 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[9]
-        json_array2 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[10]
-        json_array3 = json.loads(json.dumps(json.loads(json.dumps(task_json))['data']['list']))[12]
-        # print(json_array)
+        json_array = task_json[8]
+        json_array1 = task_json[9]
+        json_array2 = task_json[11]
+        json_array3 = task_json[14]
+        #print(json_array)
+        
+            
         userMissionId = str(json_array['userMissionId'])
         userMissionId1 = str(json_array1['userMissionId'])
         userMissionId2 = str(json_array2['userMissionId'])
@@ -98,7 +102,6 @@ def get_task():
         period3 = str(json_array3['period'])
         print("获取period成功！")
         get_task_log += '>' + '获取period成功！'
-
 
 get_task()
 
